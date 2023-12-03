@@ -52,7 +52,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-        public void removeUserById ( long id){
+
             try (Connection connection = DriverManager.getConnection(HOST, USERNAME, PASSWORD);
                  PreparedStatement preparedStatement = connection.prepareStatement(
                          "DELETE FROM users_table WHERE id = ?")) {
@@ -65,7 +65,7 @@ public class UserDaoJDBCImpl implements UserDao {
             }
         }
 
-    }
+
 
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
