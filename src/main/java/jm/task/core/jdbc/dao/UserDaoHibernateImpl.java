@@ -1,6 +1,9 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
+import jm.task.core.jdbc.util.Util;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
 
@@ -12,6 +15,9 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
+        SessionFactory sessionFactory = Util.crateHibernateSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
+
 
     }
 
