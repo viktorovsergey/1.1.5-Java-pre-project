@@ -16,16 +16,21 @@ public class Util {
     private Connection connection;
 
 
-
-
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        return DriverManager.getConnection(HOST, USERNAME, PASSWORD);
+        Connection connection = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(HOST, USERNAME, PASSWORD);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+
+        }
+        return connection;
     }
 
-    public static SessionFactory crateHibernateSessionFactory (){
-        Configuration configuration = new Configuration().addAnnotatedClass(User.class);
-
-    return  configuration.buildSessionFactory();
-    }
+//    public static SessionFactory crateHibernateSessionFactory (){
+//        Configuration configuration = new Configuration().addAnnotatedClass(User.class);
+//
+//    return  configuration.buildSessionFactory();
+//    }
 }
