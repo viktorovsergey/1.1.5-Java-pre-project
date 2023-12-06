@@ -13,17 +13,22 @@ public class Util {
     private static final String USERNAME = "root";
     private static final String PASSWORD = "123456";
 
-    private Connection connection;
+    private static Connection connection = null;
 
 
-    public static Connection getConnection() throws ClassNotFoundException, SQLException {
-        Connection connection = null;
+    static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(HOST, USERNAME, PASSWORD);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+        }
+    }
 
+    public static Connection getConnection() throws ClassNotFoundException, SQLException {
+        if (connection == null|| connection.isClosed()) {
+            connection = DriverManager.getConnection(HOST, USERNAME, PASSWORD); {
+            };
         }
         return connection;
     }
