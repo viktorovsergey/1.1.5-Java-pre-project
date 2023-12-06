@@ -17,96 +17,69 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-//        SessionFactory sessionFactory = Util.crateHibernateSessionFactory();
-//        Session session = sessionFactory.getCurrentSession();
-//        try {
-//            session.beginTransaction();
-//            session.createSQLQuery("CREATE TABLE IF NOT EXISTS users_table (" +
-//                    "id INT PRIMARY KEY AUTO_INCREMENT," +
-//                    "name TEXT NOT NULL," +
-//                    "lastName TEXT NOT NULL," +
-//                    "age INT NOT NULL" +
-//                    ")").executeUpdate();
-//
-//            session.getTransaction().commit();
-//        } finally {
-//            sessionFactory.close();
-//        }
 
+        try (Session session = Util.HibernateSessionFactory.crateHibernateSessionFactory().getCurrentSession()) {
+            session.beginTransaction();
+            session.createSQLQuery("CREATE TABLE IF NOT EXISTS users_table (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT," +
+                    "name TEXT NOT NULL," +
+                    "lastName TEXT NOT NULL," +
+                    "age INT NOT NULL" +
+                    ")").executeUpdate();
+            session.getTransaction().commit();
+        }
     }
 
 
     @Override
     public void dropUsersTable() {
-//        SessionFactory sessionFactory = Util.crateHibernateSessionFactory();
-//        Session session = sessionFactory.getCurrentSession();
-//        try {
-//            session.beginTransaction();
-//            session.createSQLQuery("DROP TABLE IF EXISTS users").executeUpdate();
-//
-//            session.getTransaction().commit();
-//        } finally {
-//            sessionFactory.close();
-//        }
-
+        try (Session session = Util.HibernateSessionFactory.crateHibernateSessionFactory().getCurrentSession()) {
+            session.beginTransaction();
+            session.createSQLQuery("DROP TABLE IF EXISTS users").executeUpdate();
+            session.getTransaction().commit();
+        }
     }
-
-
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-//        SessionFactory sessionFactory = Util.crateHibernateSessionFactory();
-//        Session session = sessionFactory.getCurrentSession();
-//        try {
-//            session.beginTransaction();
-//            session.save(new User(name, lastName, age));
-//            session.getTransaction().commit();
-//        } finally {
-//            sessionFactory.close();
-//        }
-
+        try (Session session = Util.HibernateSessionFactory.crateHibernateSessionFactory().getCurrentSession()) {
+            session.beginTransaction();
+            session.save(new User(name, lastName, age));
+            session.getTransaction().commit();
+        }
     }
 
     @Override
     public void removeUserById(long id) {
-//        SessionFactory sessionFactory = Util.crateHibernateSessionFactory();
-//        Session session = sessionFactory.getCurrentSession();
-//        try {
-//            session.beginTransaction();
-//            session.delete(session.get(User.class, id));
-//            session.getTransaction().commit();
-//        } finally {
-//            sessionFactory.close();
+        try (Session session = Util.HibernateSessionFactory.crateHibernateSessionFactory().getCurrentSession()) {
+            session.beginTransaction();
+            User user = session.get(User.class, id);
+            if (user != null) {
+                session.delete(user);
+            }
+            session.getTransaction().commit();
+
         }
-
-
+    }
 
     @Override
     public List<User> getAllUsers() {
-//        List<User> userList = new ArrayList<>();
-//        SessionFactory sessionFactory = Util.crateHibernateSessionFactory();
-//        Session session = sessionFactory.getCurrentSession();
-//        try {
-//            session.beginTransaction();
-//            userList = session.createQuery("FROM User", User.class).getResultList();
-//        } finally {
-//            sessionFactory.close();
-//        }
-//        return userList;
-        return null;
+        List<User> userList = new ArrayList<>();
+        try (Session session = Util.HibernateSessionFactory.crateHibernateSessionFactory().getCurrentSession()) {
+            session.beginTransaction();
+            userList = session.createQuery("FROM User").getResultList();
+        }
+        return userList;
+
     }
 
     @Override
     public void cleanUsersTable() {
-//        SessionFactory sessionFactory = Util.crateHibernateSessionFactory();
-//        Session session = sessionFactory.getCurrentSession();
-//        try {
-//            session.beginTransaction();
-//            session.createQuery("DELETE FROM User").executeUpdate();
-//            session.getTransaction().commit();
-//        } finally {
-//            sessionFactory.close();
-//        }
+        try (Session session = Util.HibernateSessionFactory.crateHibernateSessionFactory().getCurrentSession()) {
+            session.beginTransaction();
+            session.createQuery("DELETE FROM User").executeUpdate();
+            session.getTransaction().commit();
 
+        }
     }
 }

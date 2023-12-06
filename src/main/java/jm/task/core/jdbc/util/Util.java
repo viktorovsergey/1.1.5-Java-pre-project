@@ -14,6 +14,7 @@ public class Util {
     private static final String PASSWORD = "123456";
 
     private static Connection connection = null;
+    private static Configuration configuration = null;
 
 
     static {
@@ -26,16 +27,27 @@ public class Util {
     }
 
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
-        if (connection == null|| connection.isClosed()) {
-            connection = DriverManager.getConnection(HOST, USERNAME, PASSWORD); {
-            };
+        if (connection == null || connection.isClosed()) {
+            connection = DriverManager.getConnection(HOST, USERNAME, PASSWORD);
+            {
+            }
+            ;
         }
         return connection;
     }
 
-//    public static SessionFactory crateHibernateSessionFactory (){
-//        Configuration configuration = new Configuration().addAnnotatedClass(User.class);
-//
-//    return  configuration.buildSessionFactory();
-//    }
+
+    public class HibernateSessionFactory  {
+        private static SessionFactory sessionFactory;
+
+        private HibernateSessionFactory () {
+        }
+        public static SessionFactory crateHibernateSessionFactory() {
+            if (sessionFactory == null) {
+                Configuration configuration = new Configuration().addAnnotatedClass(User.class);
+                sessionFactory = configuration.buildSessionFactory();
+            }
+            return sessionFactory;
+        }
+    }
 }
