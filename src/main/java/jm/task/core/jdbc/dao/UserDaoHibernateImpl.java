@@ -4,6 +4,7 @@ import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import java.util.ArrayList;
@@ -17,56 +18,79 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-
+        Transaction transaction = null;
         try (Session session = Util.HibernateSessionFactory.crateHibernateSessionFactory().getCurrentSession()) {
-            session.beginTransaction();
+            transaction = session.beginTransaction();
             session.createSQLQuery("CREATE TABLE IF NOT EXISTS users_table (" +
                     "id INT PRIMARY KEY AUTO_INCREMENT," +
                     "name TEXT NOT NULL," +
                     "lastName TEXT NOT NULL," +
                     "age INT NOT NULL" +
                     ")").executeUpdate();
-            session.getTransaction().commit();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
+
     }
 
 
     @Override
     public void dropUsersTable() {
+        Transaction transaction = null;
         try (Session session = Util.HibernateSessionFactory.crateHibernateSessionFactory().getCurrentSession()) {
-            session.beginTransaction();
+            transaction = session.beginTransaction();
             session.createSQLQuery("DROP TABLE IF EXISTS users").executeUpdate();
-            session.getTransaction().commit();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+
         }
     }
 
+
     @Override
     public void saveUser(String name, String lastName, byte age) {
+        Transaction transaction = null;
         try (Session session = Util.HibernateSessionFactory.crateHibernateSessionFactory().getCurrentSession()) {
-            session.beginTransaction();
+            transaction = session.beginTransaction();
             session.save(new User(name, lastName, age));
-            session.getTransaction().commit();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
     }
 
     @Override
     public void removeUserById(long id) {
+        Transaction transaction = null;
         try (Session session = Util.HibernateSessionFactory.crateHibernateSessionFactory().getCurrentSession()) {
-            session.beginTransaction();
+            transaction = session.beginTransaction();
             User user = session.get(User.class, id);
             if (user != null) {
                 session.delete(user);
             }
-            session.getTransaction().commit();
+            transaction.commit();
 
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
     }
 
     @Override
     public List<User> getAllUsers() {
+        Transaction transaction = null;
         List<User> userList = new ArrayList<>();
         try (Session session = Util.HibernateSessionFactory.crateHibernateSessionFactory().getCurrentSession()) {
-            session.beginTransaction();
+            transaction = session.beginTransaction();
             userList = session.createQuery("FROM User").getResultList();
         }
         return userList;
@@ -75,11 +99,16 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
+        Transaction transaction = null;
         try (Session session = Util.HibernateSessionFactory.crateHibernateSessionFactory().getCurrentSession()) {
-            session.beginTransaction();
+            transaction = session.beginTransaction();
             session.createQuery("DELETE FROM User").executeUpdate();
-            session.getTransaction().commit();
+            transaction.commit();
 
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
     }
 }
